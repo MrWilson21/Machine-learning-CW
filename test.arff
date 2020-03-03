@@ -1,0 +1,17 @@
+@RELATION Test
+
+@ATTRIBUTE x1 NUMERIC
+@ATTRIBUTE x2 NUMERIC
+
+@ATTRIBUTE class {-1.0, 1.0}
+
+@DATA
+-4.9    ,0.4    ,1.0
+4.6     ,4.4     ,-1.0
+7.0     ,-5.3    ,-1.0
+2.4     ,-5.1      ,1.0
+-5.7    ,7.4     ,1.0
+7.3    ,-4.0     ,-1.0
+-0.9    , -8.0     ,1.0
+0.5    ,9.3     ,-1.0
+

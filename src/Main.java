@@ -8,16 +8,13 @@ public class Main
     {
         Instances train = WekaTools.loadClassificationData("test.arff");
 
-         nnClassifier = new IBk();
+        LinearPerceptron lp = new LinearPerceptron();
         try
         {
-            nnClassifier.buildClassifier(train);
+            lp.buildClassifier(train);
         } catch (Exception e)
         {
             e.printStackTrace();
         }
-
-        WekaTools.printDistribution(test, nnClassifier);
-        System.out.println(WekaTools.accuracy(nnClassifier, train, train));
     }
 }
