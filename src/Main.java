@@ -6,15 +6,17 @@ public class Main
 
     public static void main(String[] args)
     {
-        Instances train = WekaTools.loadClassificationData("test.arff");
+        Instances train = WekaTools.loadClassificationData("bank_TRAIN.arff");
+        Instances test = WekaTools.loadClassificationData("bank_TEST.arff");
 
-        LinearPerceptron lp = new LinearPerceptron();
-        try
-        {
-            lp.buildClassifier(train);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        EnhancedLinearPerceptron lp = new EnhancedLinearPerceptron();
+
+        lp.maxIterations = 10;
+        lp.biasTerm = 0;
+        lp.normaliseAttributes = true;
+        lp.learningRate = 1;
+        lp.modelSelection = true;
+
+        System.out.println(WekaTools.accuracy(lp, test, train));
     }
 }

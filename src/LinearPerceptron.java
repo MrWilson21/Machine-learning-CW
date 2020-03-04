@@ -1,10 +1,8 @@
 import weka.classifiers.AbstractClassifier;
-import weka.core.Attribute;
 import weka.core.Capabilities;
 import weka.core.Instance;
 import weka.core.Instances;
 
-import java.util.Arrays;
 
 public class LinearPerceptron extends AbstractClassifier
 {
@@ -13,7 +11,7 @@ public class LinearPerceptron extends AbstractClassifier
 
     public double learningRate = 1;
     public double maxIterations = 100;
-
+    public double biasTerm = 0;
 
     @Override
     public void buildClassifier(Instances instances) throws Exception
@@ -42,7 +40,8 @@ public class LinearPerceptron extends AbstractClassifier
 
             //Evaluate instance
             Instance currentInstance  = instances.get(index);
-            double eval = 0;
+            //Assign evaluation to the value of bias term then add each weighted component
+            double eval = biasTerm;
             for(int i = 0; i < numAttributes; i++)
             {
                 eval += weights[i] * currentInstance.value(i);
@@ -67,15 +66,19 @@ public class LinearPerceptron extends AbstractClassifier
 
             index = (index + 1 ) % instances.numInstances();
         }
-
-        System.out.println(iterations);
-        System.out.println(Arrays.toString(weights));
     }
 
     @Override
     public double classifyInstance(Instance instance)
     {
-        return 1.0;
+        //Assign evaluation to the value of bias term then add each weighted component
+        double eval = biasTerm;
+        for(int i = 0; i < numAttributes; i++)
+        {
+            eval += weights[i] * instance.value(i);
+        }
+
+        return eval > 0? 1 : 0;
     }
 
 
