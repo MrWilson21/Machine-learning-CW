@@ -1,5 +1,6 @@
 import weka.classifiers.AbstractClassifier;
 import weka.core.Capabilities;
+import weka.core.DenseInstance;
 import weka.core.Instance;
 import weka.core.Instances;
 
@@ -22,10 +23,12 @@ public class EnhancedLinearPerceptron extends AbstractClassifier
     @Override
     public void buildClassifier(Instances instances) throws Exception
     {
-        //Ensure only valid training data is used
-        testCapabilities(instances);
+        Instances newInstances = new Instances(instances);
 
-        numAttributes = instances.numAttributes() - 1;
+        //Ensure only valid training data is used
+        testCapabilities(newInstances);
+
+        numAttributes = newInstances.numAttributes() - 1;
         weights = new double[numAttributes];
 
         //Initialise weights
@@ -37,36 +40,38 @@ public class EnhancedLinearPerceptron extends AbstractClassifier
         //Normalise attribute vectors
         if(normaliseAttributes)
         {
-            for(int i = 0; i < instances.numInstances(); i++)
+            for(int i = 0; i < newInstances.numInstances(); i++)
             {
-                normaliseInstance(instances.instance(i));
+                normaliseInstance(newInstances.instance(i));
             }
         }
 
         if(modelSelection)
         {
-            chooseMethod(instances);
+            chooseMethod(newInstances);
         }
         else
         {
-            buildOnLine(instances);
+            buildOnLine(newInstances);
         }
     }
 
     @Override
     public double classifyInstance(Instance instance)
     {
+        Instance newInstance = new DenseInstance(instance);
+
         //Normalise attribute vector
         if(normaliseAttributes)
         {
-            normaliseInstance(instance);
+            normaliseInstance(newInstance);
         }
 
         //Assign evaluation to the value of bias term then add each weighted component
         double eval = biasTerm;
         for(int i = 0; i < numAttributes; i++)
         {
-            eval += weights[i] * instance.value(i);
+            eval += weights[i] * newInstance.value(i);
         }
 
         return eval > 0? 1 : 0;
@@ -90,12 +95,10 @@ public class EnhancedLinearPerceptron extends AbstractClassifier
         //Build with which ever method has the best mean accuracy
         if(onLineAccuracies > offLineAccuracies)
         {
-            System.out.println("Building with on-line method");
             buildOnLine(instances);
         }
         else
         {
-            System.out.println("Building with off-line method");
             buildOffLine(instances);
         }
     }
