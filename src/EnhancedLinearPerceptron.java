@@ -11,18 +11,19 @@ public class EnhancedLinearPerceptron extends AbstractClassifier
 {
     private double[] weights;
     private int numAttributes;
+    private int numFolds = 10;
 
     public double learningRate = 1;
     public double maxIterations = 100;
     public double biasTerm = 0;
-
     public boolean normaliseAttributes = true;
     public boolean modelSelection = false;
-    public int numFolds = 10;
+    public boolean buildOnLine = true;
 
     @Override
     public void buildClassifier(Instances instances) throws Exception
     {
+        //Copy instances before building with them
         Instances newInstances = new Instances(instances);
 
         //Ensure only valid training data is used
@@ -52,7 +53,14 @@ public class EnhancedLinearPerceptron extends AbstractClassifier
         }
         else
         {
-            buildOnLine(newInstances);
+            if(buildOnLine)
+            {
+                buildOnLine(newInstances);
+            }
+            else
+            {
+                buildOffLine(newInstances);
+            }
         }
     }
 
@@ -85,8 +93,8 @@ public class EnhancedLinearPerceptron extends AbstractClassifier
 
         for(int i = 0; i < numFolds; i++)
         {
-            Instances train = instances.trainCV(10, 1);
-            Instances test = instances.testCV(10, 1);
+            Instances train = instances.trainCV(10, i);
+            Instances test = instances.testCV(10, i);
 
             onLineAccuracies += accuracy(test, train, false);
             offLineAccuracies += accuracy(test, train, true);

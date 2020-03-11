@@ -9,20 +9,21 @@ public class Main
         Instances train = WekaTools.loadClassificationData("bank_TRAIN.arff");
         Instances test = WekaTools.loadClassificationData("bank_TEST.arff");
 
-        LinearPerceptronEnsemble lp = new LinearPerceptronEnsemble();
+        //LinearPerceptronEnsemble lp = new LinearPerceptronEnsemble();
         EnhancedLinearPerceptron lp2 = new EnhancedLinearPerceptron();
 
         try
         {
-            lp.buildClassifier(test);
-            lp2.buildClassifier(test);
+            //lp.buildClassifier(test);
+            //lp2.buildClassifier(test);
         } catch (Exception e)
         {
             e.printStackTrace();
         }
 
         //lp.distributionForInstance(train.instance(0));
-        System.out.println(WekaTools.accuracy(lp, test, train));
+        //System.out.println(WekaTools.accuracy(lp, test, train));
+        lp2.modelSelection = true;
         System.out.println(WekaTools.accuracy(lp2, test, train));
     }
 }
